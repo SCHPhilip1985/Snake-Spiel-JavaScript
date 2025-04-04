@@ -96,7 +96,7 @@
         }
 
         function shiftSnake(){
-            for (let i = snake.length - 1; i > 0; i++) {
+            for (let i = snake.length - 1; i > 0; i--) {
                 const part = snake[i];
                 const lastPart = snake[i - 1];
                 part.x = lastPart.x;
@@ -141,16 +141,16 @@
             }
         }
         function keyDown(e) {
-            if (e.keycode == 37) {
+            if (e.keyCode == 37) {
                 direction = 'LEFT';
             }
-            if (e.keycode == 38) {
+            if (e.keyCode == 38) {
                 direction = 'UP';
             }
-            if (e.keycode == 39) {
+            if (e.keyCode == 39) {
                 direction = 'RIGHT';
             }
-            if (e.keycode == 40) {
+            if (e.keyCode == 40) {
                 direction = 'DOWN';
             }
         }
