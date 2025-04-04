@@ -16,30 +16,29 @@
         let ctx = canvas.getContext('2d');
         let rows = 20;
         let cols = 20;
-        let snake = [
-            {
+        let snake = [{
                 x: 19, 
-                y:3
+                y: 3
+        }];
        
-            }];
        
-       
-            let food = { 
-            x: 4, 
-            y: 5 
-        }; 
+        let food;
        
        
        
         let cellWidth = canvas.width / cols;
         let cellHeight = canvas.height / rows;
         let direction = 'LEFT';
+        let foodCollected = false;
+
+        placeFood();
 
 
-        setInterval(gameLoop, 500);
+        setInterval(gameLoop, 200);
         document.addEventListener('keydown', keyDown);
 
         draw();
+        
 
         function draw() {
             ctx.fillStyle = 'black';
@@ -56,42 +55,102 @@
             add(food.x, food.y); //Food
 
             requestAnimationFrame(draw);
-
         }
+
+        function testGameOver() {
+
+            let firstPart = snake[0];
+            let otherParts = snake.slice(1); 
+            let duplicatePart = otherParts.find(part => part.x == firstPart.x && part.y == firstPart.y);
+
+            // 1. Schlange läuft gegen die Wand 
+            if  (snake[0].x < 0 ||
+                snake[0].x > cols -1 ||
+                snake[0].y < 0 || 
+                snake[0].y > rows - 1 ||
+                duplicatePart
+            ) {
+                placeFood();
+                snake = [{
+                    x: 19, 
+                    y: 3
+                }];
+                direction = 'LEFT';
+            }
+        }
+
+        function placeFood(){
+            let randomX = Math.floor(Math.random() * cols);
+            let randomY = Math.floor(Math.random() * rows);
+
+
+            food = {
+                x: randomX,
+                y: randomY
+            };
+        }
+
 
         function add(x, y) {
             ctx.fillRect(x * cellWidth, y * cellHeight, cellWidth - 1, cellHeight - 1);
         }
 
+        function shiftSnake(){
+            for (let i = snake.length - 1; i > 0; i++) {
+                const part = snake[i];
+                const lastPart = snake[i - 1];
+                part.x = lastPart.x;
+                part.y = lastPart.y;
+            }
+        }
 
         function gameLoop() {
-            if (direction == 'LEFT') {
-            snake[0].x--;
+            testGameOver();
+            if (foodCollected) {
+                snake = [{
+                    x: snake[0].x, 
+                    y: snake[0].y
+                }, ...snake];
 
+                foodCollected = false; 
             }
+
+            shiftSnake();
+
+            if (direction == 'LEFT') {
+                snake[0].x--;
+            }
+
             if (direction == 'RIGHT') {
                 snake[0].x++;
-
             }
+
             if (direction == 'UP') {
                 snake[0].y--;
-
             }
+
             if (direction == 'DOWN') {
                 snake[0].y++;
             }    
+
+            if  (snake[0].x == food.x && 
+                snake[0].y == food.y) {
+                foodCollected = true; // Futter einsammeln 
+
+                placeFood();
+            }
         }
         function keyDown(e) {
-            if(e.keycode == 37){
+            if (e.keycode == 37) {
                 direction = 'LEFT';
             }
-            if(e.keycode == 38){
+            if (e.keycode == 38) {
                 direction = 'UP';
             }
-            if(e.keycode == 39){
+            if (e.keycode == 39) {
                 direction = 'RIGHT';
             }
-            if(e.keycode == 40){
+            if (e.keycode == 40) {
                 direction = 'DOWN';
             }
         }
