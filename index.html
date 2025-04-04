@@ -27,7 +27,7 @@
             let food = { 
             x: 4, 
             y: 5 
-        };
+        }; 
        
        
        
@@ -37,6 +37,7 @@
 
 
         setInterval(gameLoop, 500);
+        document.addEventListener('keydown', keyDown);
 
         draw();
 
@@ -64,9 +65,37 @@
 
 
         function gameLoop() {
+            if (direction == 'LEFT') {
             snake[0].x--;
 
+            }
+            if (direction == 'RIGHT') {
+                snake[0].x++;
+
+            }
+            if (direction == 'UP') {
+                snake[0].y--;
+
+            }
+            if (direction == 'DOWN') {
+                snake[0].y++;
+            }    
         }
+        function keyDown(e) {
+            if(e.keycode == 37){
+                direction = 'LEFT';
+            }
+            if(e.keycode == 38){
+                direction = 'UP';
+            }
+            if(e.keycode == 39){
+                direction = 'RIGHT';
+            }
+            if(e.keycode == 40){
+                direction = 'DOWN';
+            }
+        }
+
 
     </script>
 
